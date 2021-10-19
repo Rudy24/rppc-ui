@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test lyLink link 1`] = `<a href="www.baidu.com" class="ly-link-primary1">button text</a>`;
