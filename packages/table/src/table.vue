@@ -77,7 +77,8 @@ export default {
       list: [],
       tableLocalAttrs: {
         // table 默认属性
-        border: true
+        border: true,
+        size: 'small'
       },
       tableItemLocalAttrs: {
         // tableItem默认属性

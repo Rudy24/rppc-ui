@@ -1,6 +1,6 @@
 # 忽略目录
-src/
-packages/
+examples/
+packages
 public/
 dist/
 common/
@@ -10,3 +10,5 @@ test/
 vue.config.js
 babel.config.js
 *.map
+*.
+jsconfig.json

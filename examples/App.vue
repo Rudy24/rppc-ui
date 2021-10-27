@@ -13,13 +13,13 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { RpPage } from '../packages'
 
 export default {
   name: 'App',
   components: {
     RpPage
-    // Hello
   },
   mounted() {
     this.$refs.basePage.loadBaseTableData()
@@ -40,10 +40,10 @@ export default {
               trigger: 'blur'
             }
           ],
-          formItem: {
+          formItems: {
             label: '物料'
           },
-          propsItem: {
+          propsItems: {
             placeholder: '请输入名称或编码',
             clearable: true,
             event: {
@@ -51,7 +51,7 @@ export default {
                 console.log(e)
                 const item = JSON.parse(JSON.stringify(this.formOpts[1]))
                 item.model = 'name1'
-                item.formItem.label = '名字1'
+                item.formItems.label = '名字1'
                 console.log(item, '====')
                 this.formOpts.push(item)
               },
@@ -70,11 +70,11 @@ export default {
         {
           type: 'input',
           model: 'code',
-          formItem: {
+          formItems: {
             label: '物料条码'
           },
           rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
+          propsItems: {
             placeholder: '请输入物料条码',
             clearable: true,
             event: {
@@ -88,11 +88,11 @@ export default {
         {
           type: 'input',
           model: 'code',
-          formItem: {
+          formItems: {
             label: '物料条码'
           },
           rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
+          propsItems: {
             placeholder: '请输入物料条码',
             clearable: true,
             event: {
@@ -106,11 +106,11 @@ export default {
         {
           type: 'input',
           model: 'code',
-          formItem: {
+          formItems: {
             label: '物料条码'
           },
           rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
+          propsItems: {
             placeholder: '请输入物料条码',
             clearable: true,
             event: {
@@ -124,11 +124,11 @@ export default {
         {
           type: 'input',
           model: 'code',
-          formItem: {
+          formItems: {
             label: '物料条码'
           },
           rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
+          propsItems: {
             placeholder: '请输入物料条码',
             clearable: true,
             event: {
@@ -140,109 +140,23 @@ export default {
           }
         },
         {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
-          },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
-            event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
-              }
-            }
+          type: 'button',
+          model: 'btns',
+          propsItems: {
+            btnName: '提交'
           }
         },
         {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
+          type: 'button',
+          model: 'btns',
+          formItems: {
+            labelWidth: '20px'
           },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
+          propsItems: {
+            btnName: '重置',
             event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
-              }
-            }
-          }
-        },
-        {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
-          },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
-            event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
-              }
-            }
-          }
-        },
-        {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
-          },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
-            event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
-              }
-            }
-          }
-        },
-        {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
-          },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
-            event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
-              }
-            }
-          }
-        },
-        {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
-          },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
-            event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
+              click: () => {
+                console.log(123123)
               }
             }
           }
@@ -258,30 +172,26 @@ export default {
         },
         {
           prop: 'options',
-          label: '物料编码',
+          label: '图片',
           renderHeader() {
-            return <span style="color: red">*物料编码</span>
+            return <span style="color: red">*图片</span>
+          },
+          render: (h, params) => {
+            const { image } = params.row
+            return <el-image style="width: 50px; height: 50px" src={image}></el-image>
           }
-          // render: (h, params) => {
-          //   const { skuNo } = params.row
-          //   return (
-          //     <div class="textButton" onClick={() => this.goToDetail(params.row)}>
-          //       {skuNo}
-          //     </div>
-          //   )
-          // }
         },
         {
-          prop: 'barcode',
-          label: '物料条码'
+          prop: 'email',
+          label: '邮箱'
         },
         {
-          prop: 'name',
-          label: '物料名称'
+          prop: 'csentence',
+          label: '简介'
         },
         {
-          prop: 'categoryName',
-          label: '物料分类'
+          prop: 'cparagraph',
+          label: '内容'
         }
       ]
     }
@@ -300,10 +210,9 @@ export default {
       }
     },
     async getList(params) {
-      const { pageNo, pageSize } = params || this
-      const url = `${this.$api.getHeadGoodsList}?pageNo=${pageNo}&pageSize=${pageSize}`
-      console.log(url)
-      // return await this.$ajax('postJson', url, params)
+      console.log(params)
+      // eslint-disable-next-line no-return-await
+      return await axios.get('/easymock/getList')
     },
     handleSelectionChange(val) {
       this.selectlist = val
@@ -311,3 +220,19 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+* {
+  padding: 0;
+  margin: 0;
+}
+html,
+body {
+  height: 100vh;
+}
+
+#app {
+  height: 100%;
+  // width: 90%;
+}
+</style>

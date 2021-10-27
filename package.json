@@ -1,6 +1,6 @@
 {
   "name": "rppc-ui",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "private": false,
   "main": "lib/index.umd.min.js",
   "scripts": {
@@ -11,6 +11,7 @@
     "lib": "vue-cli-service build --target lib --name index --dest lib packages/index.js"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "core-js": "^3.8.3",
     "element-ui": "^2.15.6",
     "lodash": "^4.17.21",

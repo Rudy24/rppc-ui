@@ -1,7 +1,7 @@
 <!--
  * @Author: 宋绍华
  * @Date: 2021-09-23 15:56:24
- * @LastEditTime: 2021-10-19 15:57:45
+ * @LastEditTime: 2021-10-27 21:01:18
  * @LastEditors: 宋绍华
  * @Description:
  * @FilePath: \rppcui\packages\form\form.vue
@@ -9,31 +9,36 @@
 
 <template>
   <el-form ref="baseForm" :class="{ 'baseForm-zoom': zoom }" class="baseForm" :model="formData" v-bind="formAttrs">
-    <el-form-item v-for="(item, idx) in localOptions" :key="idx" v-bind="item.formItem" :prop="item.model">
+    <el-form-item v-for="(item, idx) in localOptions" :key="idx" v-bind="item.formItems" :prop="item.model">
       <template v-if="item.type === 'input'">
         <!-- v-base-input:[item.directive] -->
-        <el-input class="baseForm-item" v-model.trim="formData[item.model]" v-bind="item.propsItem" v-on="item.propsItem.event">
-          <template :slot="item.propsItem.slotType" v-if="item.propsItem.slotType">
-            {{ item.propsItem.slotName }}
+        <el-input class="baseForm-item" v-model.trim="formData[item.model]" v-bind="item.propsItems" v-on="item.propsItems.event">
+          <template :slot="item.propsItems.slotType" v-if="item.propsItems.slotType">
+            {{ item.propsItems.slotName }}
           </template>
         </el-input>
       </template>
       <template v-else-if="item.type === 'select'">
-        <el-select class="baseForm-item" v-model.trim.lazy="formData[item.model]" v-bind="item.propsItem" v-on="item.propsItem.event">
-          <template :slot="item.propsItem.slotType">{{ item.propsItem.slotName }}</template>
-          <el-option v-for="n in item.propsItem.options" :disabled="n.disabled" :key="n.id" :label="n.label" :value="n.id"></el-option>
+        <el-select class="baseForm-item" v-model.trim.lazy="formData[item.model]" v-bind="item.propsItems" v-on="item.propsItems.event">
+          <template :slot="item.propsItems.slotType">{{ item.propsItems.slotName }}</template>
+          <el-option v-for="n in item.propsItems.options" :disabled="n.disabled" :key="n.id" :label="n.label" :value="n.id"></el-option>
         </el-select>
       </template>
       <template v-else-if="item.type === 'datePicker'">
         <el-date-picker
-          :class="getDatePickerClass(item.propsItem.type)"
+          :class="getDatePickerClass(item.propsItems.type)"
           v-model.trim.lazy="formData[item.model]"
-          v-bind="item.propsItem"
+          v-bind="item.propsItems"
         ></el-date-picker>
       </template>
       <template v-else-if="item.type === 'radio'">
-        <el-radio-group class="baseForm-item" v-model.trim.lazy="formData[item.model]" v-bind="item.propsItem" v-on="item.propsItem.event">
-          <el-radio :label="n.id" v-for="n in item.propsItem.options" :disabled="n.disabled" :key="n.id">
+        <el-radio-group
+          class="baseForm-item"
+          v-model.trim.lazy="formData[item.model]"
+          v-bind="item.propsItems"
+          v-on="item.propsItems.event"
+        >
+          <el-radio :label="n.id" v-for="n in item.propsItems.options" :disabled="n.disabled" :key="n.id">
             {{ n.label }}
           </el-radio>
         </el-radio-group>
@@ -41,14 +46,17 @@
       <template v-else-if="item.type === 'cascader'">
         <el-cascader
           class="baseForm-item"
-          :options="item.propsItem.options"
+          :options="item.propsItems.options"
           v-model.trim.lazy="formData[item.model]"
-          v-bind="item.propsItem"
+          v-bind="item.propsItems"
         ></el-cascader>
+      </template>
+      <template v-else-if="item.type === 'button'">
+        <el-button v-on="item.propsItems.event" v-bind="item.propsItems">{{ item.propsItems.btnName }}</el-button>
       </template>
       <!-- 自定义组件 -->
       <template v-else-if="item.type === 'custom'">
-        <component class="baseForm-item" :is="item.components" v-bind="item.propsItem" v-on="item.propsItem.event"></component>
+        <component class="baseForm-item" :is="item.components" v-bind="item.propsItems" v-on="item.propsItems.event"></component>
       </template>
       <template v-else-if="item.type === 'slot'">
         <slot :name="item.slotName"></slot>
@@ -65,42 +73,8 @@
 </template>
 
 <script>
-/**
- * BaseForm form 通用组件
-  options = [
-   {
-      id: 0,
-      type: 'input', 组件的类型
-      model: 'nameOrCode', 组件model
-      formItem: { form-item 的属性对象
-        label: '物料'
-        ...
-      },
-      propsItem: { // form-item 中 template里面组件的属性
-        placeholder: '请输入名称或编码',
-        clearable: true,
-        ...
-        event: { //  组件的事件
-          blur: (e) => {
-            console.log(e)
-          },
-          change: (e) => {
-            console.log(e)
-          },
-          focus: (e) => {
-            console.log(e)
-          },
-          input: (e) => {
-            console.log(e)
-          }
-          ...
-        }
-      }
-    }
- ]
- */
 export default {
-  name: 'baseForm',
+  name: 'RpForm',
   props: {
     options: {
       type: Array,
@@ -124,7 +98,8 @@ export default {
     return {
       formLocalAtrrs: {
         // 本地form 一些基础属性
-        labelWidth: '120px'
+        labelWidth: '120px',
+        size: 'small'
       },
       formData: this.getAttrs(0)
     }
@@ -135,28 +110,28 @@ export default {
       const rules = this.getAttrs(1)
       return { ...this.formLocalAtrrs, rules }
     },
-    // 重组下form options，避免譬如propsItem 属性不存在而报错
+    // 重组下form options，避免譬如propsItems 属性不存在而报错
     localOptions() {
       return this.options.map((item) => {
-        const { type, formItem = {} } = item
-        let { propsItem = {} } = item
-        const { label = '' } = formItem
+        const { type, formItems = {} } = item
+        let { propsItems = {} } = item
+        const { label = '' } = formItems
         // 判断null, 如果为null 就赋值为空对象
-        if (propsItem instanceof Object) {
-          propsItem = {}
+        if (propsItems instanceof Object) {
+          propsItems = {}
         }
         // 如果没有填写placeholder，需要根据不同类型去配置placeholder value
-        if (!propsItem.placeholder) {
+        if (!propsItems.placeholder) {
           switch (type) {
             case 'input':
-              propsItem.placeholder = `请输入${label}`
+              propsItems.placeholder = `请输入${label}`
               break
             case 'select':
-              propsItem.placeholder = `请选择${label}`
+              propsItems.placeholder = `请选择${label}`
               break
             case 'datePicker':
-              if (propsItem.type === 'date') {
-                propsItem.placeholder = '请选择日期'
+              if (propsItems.type === 'date') {
+                propsItems.placeholder = '请选择日期'
               }
               break
             default:
@@ -166,12 +141,15 @@ export default {
         // 加上默认配置
         if (type === 'datePicker') {
           // eslint-disable-next-line no-param-reassign
-          item.propsItem = {
+          item.propsItems = {
             rangeSeparator: '至',
             startPlaceholder: '开始时间',
             endPlaceholder: '结束时间',
-            ...propsItem
+            ...propsItems
           }
+        } else if (type === 'button') {
+          // eslint-disable-next-line no-param-reassign
+          item.propsItems = { size: 'small', ...item.propsItems }
         }
 
         return item
@@ -182,7 +160,6 @@ export default {
     // 获取options 对应的属性和值得集合
     getAttrs(type = 0) {
       const o = {}
-      console.log(JSON.parse(JSON.stringify(this.options)), '44')
       this.options.forEach((item) => {
         const { model, modelValue, rules } = item
         o[model] = type === 0 ? modelValue : rules

@@ -29,7 +29,7 @@ export default {
     // 除了form、table之外的高度
     otherHight: {
       type: Number,
-      default: 157
+      default: 0
     },
     // 默认显示form item的高度，
     normalFormItemHight: {
@@ -113,3 +113,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.basePage {
+  height: 100%;
+}
+</style>
