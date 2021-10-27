@@ -1,12 +1,3 @@
-<!--
- * @Author: 宋绍华
- * @Date: 2021-10-18 17:01:37
- * @LastEditTime: 2021-10-19 15:57:03
- * @LastEditors: 宋绍华
- * @Description:
- * @FilePath: \rppcui\examples\App.vue
--->
-
 <template>
   <div id="app">
     <RpPage
@@ -255,24 +246,6 @@ export default {
               }
             }
           }
-        },
-        {
-          type: 'input',
-          model: 'code',
-          formItem: {
-            label: '物料条码'
-          },
-          rules: [{ required: true, message: '请选择活动区域', trigger: 'blur' }],
-          propsItem: {
-            placeholder: '请输入物料条码',
-            clearable: true,
-            event: {
-              input: () => {
-                console.log('onInput')
-                // this.handleInput(`onInput ${e}`)
-              }
-            }
-          }
         }
       ],
       options: [
@@ -285,10 +258,10 @@ export default {
         },
         {
           prop: 'options',
-          label: '物料编码'
-          // renderHeader() {
-          //   return <span style="color: red">*物料编码</span>
-          // },
+          label: '物料编码',
+          renderHeader() {
+            return <span style="color: red">*物料编码</span>
+          }
           // render: (h, params) => {
           //   const { skuNo } = params.row
           //   return (
